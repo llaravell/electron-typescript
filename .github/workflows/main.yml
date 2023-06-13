@@ -1,0 +1,20 @@
+# name of github action
+name: CI
+
+# when to run the action
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# jobs to run
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
