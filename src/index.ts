@@ -1,7 +1,8 @@
 import { app, BrowserWindow, ipcMain, Menu, nativeImage, Notification, Tray } from 'electron';
 import path from 'path';
-import { download, File,Progress } from 'electron-dl';
+import { download, File, Progress } from 'electron-dl';
 import 'dotenv/config';
+import updateApp from 'update-electron-app';
 
 let win: BrowserWindow;
 
@@ -208,4 +209,14 @@ app.on('window-all-closed', () => {
 		app.quit();
 	}
 });
+
+// check if os not linux
+if (process.platform !== 'linux') {
+	updateApp({
+		repo: process.env.APP_REPO as string,
+		updateInterval: '1 hour',
+		logger: require('electron-log'),
+		notifyUser: true,
+	});
+}
 
