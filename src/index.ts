@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, Menu, nativeImage, Notification, Tray } fr
 import path from 'path';
 import { download, File, Progress } from 'electron-dl';
 import updateApp from 'update-electron-app';
-import { Config } from './configs/configs';
+import Setting from './settings/settings';
 
 let win: BrowserWindow;
 
@@ -20,11 +20,10 @@ async function createWindow() {
 		maxHeight: 700,
 		maximizable: false,
 		minimizable: true,
-		title: Config.APP_NAME,
-		icon: path.join(__dirname, 'images', Config.APP_LOGO),
+		title: Setting.APP_NAME,
+		icon: path.join(__dirname, 'images', Setting.APP_LOGO),
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
-			webSecurity: false
 		}
 	});
 
@@ -55,12 +54,12 @@ async function createWindow() {
 							width: 500,
 							height: 460,
 							title: 'Proxy Setting',
-							icon: path.join(__dirname, 'images', Config.APP_LOGO),
+							icon: path.join(__dirname, 'images', Setting.APP_LOGO),
 							webPreferences: {
 								preload: path.join(__dirname, 'preload.js'),
 							}
 						});
-						proxyWin.loadFile('./proxy-setting.html');
+						proxyWin.loadFile(path.join(__dirname, 'proxy.html'));
 					}
 				}
 			]
@@ -142,12 +141,12 @@ async function createWindow() {
 
 	// set app id for windows
 	if (process.platform === 'win32') {
-		app.setAppUserModelId(Config.APP_NAME);
+		app.setAppUserModelId(Setting.APP_NAME);
 	}
 
 	// show notification
 	function showNotification(title: string, body: string, url?: string) {
-		const notification = new Notification({ title, body, icon: path.join(__dirname, 'images', Config.APP_LOGO) });
+		const notification = new Notification({ title, body, icon: path.join(__dirname, 'images', Setting.APP_LOGO) });
 		notification.show();
 		notification.on('click', () => {
 			// do something with url
@@ -179,9 +178,9 @@ app.whenReady().then(async () => {
 			}
 		}
 	];
-	const icon = nativeImage.createFromPath(path.join(__dirname, 'images', Config.APP_LOGO));
+	const icon = nativeImage.createFromPath(path.join(__dirname, 'images', Setting.APP_LOGO));
 	const tray = new Tray(icon);
-	tray.setToolTip(Config.APP_NAME);
+	tray.setToolTip(Setting.APP_NAME);
 	tray.setContextMenu(Menu.buildFromTemplate(template));
 	const gotTheLock = app.requestSingleInstanceLock();
 	if (!gotTheLock) {
@@ -211,7 +210,7 @@ app.on('window-all-closed', () => {
 // check if os not linux
 if (process.platform !== 'linux') {
 	updateApp({
-		repo: Config.APP_REPO,
+		repo: Setting.APP_REPO,
 		updateInterval: '1 hour',
 		logger: require('electron-log'),
 		notifyUser: true,
