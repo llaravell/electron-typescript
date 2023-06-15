@@ -10,6 +10,7 @@
     "start": "electron ./build/index.js",
     "style": "npx tailwindcss -i ./src/styles/global.css -o ./build/styles.css",
     "test": "jest",
+    "watch-tests": "jest --watch",
     "prepack": "npm run build",
     "pack": "electron-builder"
   },
@@ -41,8 +42,6 @@
     "update-electron-app": "^2.0.1"
   },
   "devDependencies": {
-    "typescript": "^5.0.4",
-    "electron": "^25.0.0",
     "@types/axios": "^0.14.0",
     "@types/cheerio": "^0.22.31",
     "@types/electron": "^1.6.10",
@@ -50,11 +49,13 @@
     "@types/node": "^20.2.5",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
+    "electron": "^25.0.0",
     "electron-builder": "^23.6.0",
     "eslint": "^8.42.0",
     "jest": "^29.5.0",
     "tailwindcss": "^3.3.2",
-    "ts-jest": "^29.1.0"
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
   },
   "build": {
     "appId": "com.electron.application",
@@ -64,6 +65,9 @@
       "build/**/*",
       "build/*"
     ],
+    "directories": {
+      "buildResources": "build"
+    },
     "win": {
       "target": [
         "nsis",

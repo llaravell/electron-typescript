@@ -1,8 +1,8 @@
 import { app, BrowserWindow, ipcMain, Menu, nativeImage, Notification, Tray } from 'electron';
 import path from 'path';
 import { download, File, Progress } from 'electron-dl';
-import 'dotenv/config';
 import updateApp from 'update-electron-app';
+import { Config } from './configs/configs';
 
 let win: BrowserWindow;
 
@@ -20,10 +20,11 @@ async function createWindow() {
 		maxHeight: 700,
 		maximizable: false,
 		minimizable: true,
-		title: process.env.APP_NAME,
-		icon: path.join(__dirname, 'images', process.env.APP_LOGO as string),
+		title: Config.APP_NAME,
+		icon: path.join(__dirname, 'images', Config.APP_LOGO),
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
+			webSecurity: false
 		}
 	});
 
@@ -54,7 +55,7 @@ async function createWindow() {
 							width: 500,
 							height: 460,
 							title: 'Proxy Setting',
-							icon: path.join(__dirname, 'images', process.env.APP_LOGO as string),
+							icon: path.join(__dirname, 'images', Config.APP_LOGO),
 							webPreferences: {
 								preload: path.join(__dirname, 'preload.js'),
 							}
@@ -141,36 +142,23 @@ async function createWindow() {
 
 	// set app id for windows
 	if (process.platform === 'win32') {
-		app.setAppUserModelId(process.env.APP_NAME as string);
+		app.setAppUserModelId(Config.APP_NAME);
 	}
 
 	// show notification
 	function showNotification(title: string, body: string, url?: string) {
-		const notification = new Notification({ title, body, icon: path.join(__dirname, 'images', process.env.APP_LOGO as string) });
+		const notification = new Notification({ title, body, icon: path.join(__dirname, 'images', Config.APP_LOGO) });
 		notification.show();
 		notification.on('click', () => {
 			// do something with url
 		});
 	}
 
-	win.loadFile('./index.html');
+	win.loadFile(path.join(__dirname, 'index.html'));
 
 	win.on('close', async e => {
 		e.preventDefault();
 		win.hide();
-	});
-}
-
-const gotTheLock = app.requestSingleInstanceLock();
-
-if (!gotTheLock) {
-	app.quit();
-} else {
-	app.on('second-instance', (event) => {
-		event.preventDefault();
-		if (win) {
-			win.show();
-		}
 	});
 }
 
@@ -191,12 +179,22 @@ app.whenReady().then(async () => {
 			}
 		}
 	];
-	const icon = nativeImage.createFromPath(path.join(__dirname, 'images', process.env.APP_LOGO as string));
+	const icon = nativeImage.createFromPath(path.join(__dirname, 'images', Config.APP_LOGO));
 	const tray = new Tray(icon);
-	tray.setToolTip(process.env.APP_NAME as string);
+	tray.setToolTip(Config.APP_NAME);
 	tray.setContextMenu(Menu.buildFromTemplate(template));
-	createWindow();
-
+	const gotTheLock = app.requestSingleInstanceLock();
+	if (!gotTheLock) {
+		app.quit();
+	} else {
+		app.on('second-instance', (event) => {
+			event.preventDefault();
+			if (win) {
+				win.show();
+			}
+		});
+		createWindow();
+	}
 	app.on('activate', () => {
 		if (BrowserWindow.getAllWindows().length === 0) {
 			createWindow();
@@ -213,7 +211,7 @@ app.on('window-all-closed', () => {
 // check if os not linux
 if (process.platform !== 'linux') {
 	updateApp({
-		repo: process.env.APP_REPO as string,
+		repo: Config.APP_REPO,
 		updateInterval: '1 hour',
 		logger: require('electron-log'),
 		notifyUser: true,

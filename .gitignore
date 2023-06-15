@@ -3,3 +3,4 @@ dist
 coverage
 .vscode
 build
+snyk-linux
