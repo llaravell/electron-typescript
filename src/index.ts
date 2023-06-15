@@ -23,7 +23,7 @@ async function createWindow() {
 		title: Setting.APP_NAME,
 		icon: path.join(__dirname, 'images', Setting.APP_LOGO),
 		webPreferences: {
-			preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(__dirname, 'preload.js')
 		}
 	});
 
