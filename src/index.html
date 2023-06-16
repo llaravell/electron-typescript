@@ -7,9 +7,14 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
     <link rel="stylesheet" href="./styles.css" />
 </head>
-<body class="bg-black">
+<body class="dark:bg-black bg-white">
+    <header>
+        <button id="change-theme-button">
+            <img id="change-theme-icon" src="./images/dark.png" alt="dark-mode" class="w-7 h-7 m-5" />
+        </button>
+    </header>
     <div class="flex w-full justify-center">
-        <h1 class="text-4xl text-fuchsia-600 mt-10">Welcome to electron application</h1>
+        <h1 class="text-4xl dark:text-fuchsia-600 text-neutral-900 mt-10">Welcome to electron application</h1>
     </div>
 </body>
 </html>

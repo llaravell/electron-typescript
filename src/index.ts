@@ -27,6 +27,7 @@ async function createWindow() {
 		}
 	});
 
+	// win.webContents.openDevTools();
 	let proxyWin: BrowserWindow;
 
 	// create menu
