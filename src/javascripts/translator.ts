@@ -1,13 +1,16 @@
 import axios from 'axios';
 
-const translate = async (ids: string[]) => {
+/**
+ * @description this function will translate all tags with data-translatable dataset and get sentence from data-translate
+ * @returns Promise<void>
+ */
+const translate = async () => {
 	try {
-		ids.forEach(async (id: string) => {
-			const element = document.getElementById(id);
-			if (element) {
-				const localization = window.localStorage.getItem('lang') || 'fa';
+		document.querySelectorAll('[data-translatable]').forEach(async (node) => {
+			if (node) {
+				const localization = window.localStorage.getItem('lang') || 'en';
 				const langJson = await axios.get('../src/language/'+ localization + '/' +  localization + '.json');
-				element.innerHTML = langJson.data[element.innerText];
+				node.innerHTML = langJson.data[(node as HTMLElement).dataset.translate as string];
 			}
 		});
 	} catch (error) {
