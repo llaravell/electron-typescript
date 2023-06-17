@@ -1,17 +1,14 @@
-type newWindow = {
-    electron: {
-        // every electron object from preload.ts
-        sendNotification: (title: string, body: string) => void;
-    };
-}
+import translate from './translator';
+import { newWindow } from './types';
+
 const newWindow = window as unknown as Window & typeof globalThis & newWindow;
 
-document.addEventListener('DOMContentLoaded', async() => {
+document.addEventListener('DOMContentLoaded', async () => {
 	newWindow.electron.sendNotification('Hello', 'World');
-    
+	translate(['header-text']);
 	const changeThemeButton = document.getElementById('change-theme-button');
 	const changeThemeIcon = document.getElementById('change-theme-icon');
-    
+
 	if (changeThemeButton) {
 		changeThemeButton.addEventListener('click', async () => {
 			if (changeThemeIcon && changeThemeIcon.getAttribute('src') === './images/dark.png') {
